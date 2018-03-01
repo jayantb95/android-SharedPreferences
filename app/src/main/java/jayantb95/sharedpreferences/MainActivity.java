@@ -6,20 +6,24 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
+    private EditText edtName;
+    private EditText edtContact;
+    private TextView txtHeadingSharedPref;
     private TextView txtName;
-    private TextView txtEmail;
-    private Button btn_Save;
-    private Button btn_Retrive;
-    private Button btn_Clear;
-    public static final String mypreferences = "pref";
-    public static final String Name = "keyname";
-    public static final String Email = "keyemail";
+    private TextView txtContact;
+    private Button btnSave;
+    private Button btnRetrive;
+    private Button btnClear;
+    public static final String MY_PREFERENCES = "pref";
+    public static final String NAME = "keyname";
+    public static final String CONTACT = "keycontact";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,24 +35,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initialize() {
-        txtName = (TextView) findViewById(R.id.etName);
-        txtEmail = (TextView) findViewById(R.id.etEmail);
-        btn_Save = (Button) findViewById(R.id.btnSave);
-        btn_Retrive = (Button) findViewById(R.id.btnRetrive);
-        btn_Clear = (Button) findViewById(R.id.btnClear);
-        sharedPreferences = getSharedPreferences(mypreferences, Context.MODE_PRIVATE);
-
-        if (sharedPreferences.contains(Name)) {
-            txtName.setText(sharedPreferences.getString(Name, ""));
-        }
-        if (sharedPreferences.contains(Email)) {
-            txtEmail.setText(sharedPreferences.getString(Email, ""));
-        }
+        edtName = findViewById(R.id.edt_name);
+        edtContact = findViewById(R.id.edt_contact);
+        txtName = findViewById(R.id.txt_retrieve_name);
+        txtContact = findViewById(R.id.txt_retrieve_contact);
+        txtHeadingSharedPref = findViewById(R.id.txt_shared_pref_heading);
+        btnSave = findViewById(R.id.btn_save);
+        btnRetrive = findViewById(R.id.btn_retrive);
+        btnClear = findViewById(R.id.btn_clear);
+        sharedPreferences = getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+        loadData();
     }
 
     private void listener() {
 
-        btn_Save.setOnClickListener(new View.OnClickListener() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 storeData();
@@ -56,14 +57,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_Retrive.setOnClickListener(new View.OnClickListener() {
+        btnRetrive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loadData();
             }
         });
 
-        btn_Clear.setOnClickListener(new View.OnClickListener() {
+        btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clear();
@@ -72,33 +73,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void storeData() {
-
-        String n = txtName.getText().toString();
-        String e = txtEmail.getText().toString();
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putString(Name, n);
-        editor.putString(Email, e);
-        editor.apply();
-
-        Toast.makeText(MainActivity.this, "Data has ben stored sucessfully!", Toast.LENGTH_SHORT).show();
+        String n = edtName.getText().toString();
+        String c = edtContact.getText().toString();
+        if (n.isEmpty() | c.isEmpty()) {
+            Toast.makeText(MainActivity.this,
+                    "Enter both the values",
+                    Toast.LENGTH_SHORT)
+                    .show();
+        } else {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(NAME, n);
+            editor.putString(CONTACT, c);
+            editor.apply();
+            Toast.makeText(MainActivity.this, "Data has ben stored sucessfully!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void clear() {
-
-        txtName.setText("");
-        txtEmail.setText("");
+        edtName.setText("");
+        edtContact.setText("");
     }
 
     public void loadData() {
-
-        if (sharedPreferences.contains(Name)) {
-            txtName.setText(sharedPreferences.getString(Name, ""));
+        if (sharedPreferences.contains(NAME)) {
+            txtHeadingSharedPref.setVisibility(View.VISIBLE);
+            txtName.setVisibility(View.VISIBLE);
+            txtName.setText("Name: " + sharedPreferences.getString(NAME, ""));
+        } else {
+            txtHeadingSharedPref.setVisibility(View.GONE);
+            txtName.setVisibility(View.GONE);
         }
-        if (sharedPreferences.contains(Email)) {
-            txtEmail.setText(sharedPreferences.getString(Email, ""));
-
+        if (sharedPreferences.contains(CONTACT)) {
+            txtHeadingSharedPref.setVisibility(View.VISIBLE);
+            txtContact.setVisibility(View.VISIBLE);
+            txtContact.setText("Contact: " + sharedPreferences.getString(CONTACT, ""));
+        } else {
+            txtHeadingSharedPref.setVisibility(View.GONE);
+            txtContact.setVisibility(View.GONE);
         }
     }
 }

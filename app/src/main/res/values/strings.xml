@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Shared Preferences</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_retrieve">Retrieve</string>
+    <string name="btn_clear">Clear</string>
+    <string name="hint_name">Enter your name</string>
+    <string name="hint_contact">Enter your contact</string>
+    <string name="txt_from_shared_preference">Data from Shared Preference storage:</string>
 </resources>
